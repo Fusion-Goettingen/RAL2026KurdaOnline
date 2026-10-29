@@ -1,0 +1,51 @@
+config:
+  dataloader:
+    type: MulRan
+    base_dir: /media/aaron/dataset-ssd/datasets/MulRan
+    seq: KAIST02
+    min_range: 3.0
+    max_range: 240.0
+    correct: true
+    helipr_lidar: Ouster
+    rosbag_lidar_topic: ''
+  preprocessing:
+    deskew: true
+    subsampling_strategy: voxel
+    voxelsize_1: 0.4
+    voxelsize_2: 1.8
+    motion_model: constant_velocity
+  registration:
+    adaptive_threshold: true
+    min_motion_threshold: 0.1
+    tau: 0.2939637213218949
+    max_matching_distance: 2.645673491897054
+    max_icp_iterations: 100
+    min_icp_magnitude: 1.0e-05
+    min_num_correspondences: 5714
+    adaptive_min_num_correspondeces_factor: 0.5
+    levenberg_alpha: 1.0
+    levenberg_lambda: 0.0
+    outer_threads: 5
+    inner_threads: 4
+    strategy: single_registration
+  mapping:
+    voxelsize: 0.5
+    max_points_per_voxel: 5
+    min_keyframe_distance: 16.0
+    max_keyframe_distance: 80.0
+    voxel_prune_distance: -1.0
+  posegraph:
+    gating_distance: 0.5
+    max_iterations: 100
+    min_optimization_magnitude: 1.0e-05
+    tau: 0.5
+    optimize: true
+    only_last: false
+    use_adjoint: true
+report:
+  frames_processed: 8941
+  total_time_sec: 1162.3432312073128
+  fps: 7.692220129086212
+  status: SUCCESS
+  rpe_100: 2.3245577604461563
+  kitti: 2.007220678242451

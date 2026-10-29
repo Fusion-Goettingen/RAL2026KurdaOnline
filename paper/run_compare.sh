@@ -17,7 +17,8 @@ python3 compare.py \
     "$OUT_DIR/genz-icp/kitti/*/*_poses_kitti.txt" kiss_on_kitti GenZ-ICP \
     "$OUT_DIR/kiss-slam/kitti/*/*_poses_kitti.txt" kiss_on_kitti KISS-SLAM \
     --metrics KITTI RPE:100 \
-    --fps ours_fps kiss_fps mad_fps kiss_fps kiss_slam_fps
+    --fps ours_fps kiss_fps mad_fps kiss_fps kiss_slam_fps \
+    --dataset_base_dir "$KITTI_BASE_DIR" 
 
 echo "Evaluating MulRan dataset"
 python3 compare.py \
@@ -29,7 +30,7 @@ python3 compare.py \
     "$OUT_DIR/kiss-slam/mulran/*/*_poses_kitti.txt" kitti KISS-SLAM \
     --metrics KITTI RPE:100 \
     --fps ours_fps kiss_fps mad_fps kiss_fps kiss_slam_fps \
-    --clip # MulRan contains corrupt point clouds on some trajectories which causes MAD-ICP to crash near the end of the trajectory.
+    --clip  # MulRan contains corrupt point clouds on some trajectories which causes MAD-ICP to crash near the end of the trajectory.
 
 echo "Evaluating Odyssey dataset"
 python3 compare.py \
@@ -42,3 +43,16 @@ python3 compare.py \
     --metrics KITTI RPE:100 \
     --fps ours_fps kiss_fps mad_fps kiss_fps kiss_slam_fps \
     --exclude Tunnel[1-3] # We exclude Tunnel from our evaluation because all trajectories diverge on it
+
+
+echo "Evaluating Ablation Study on MulRan dataset"
+python3 compare.py \
+    "$MULRAN_BASE_DIR/*/global_pose.csv" mulran_gt GT \
+    "$OUT_DIR/ours/mulran/*.txt" kitti Ours \
+    "$OUT_DIR/ours-co/mulran/*.txt" kitti CO \
+    "$OUT_DIR/ours-mer-mul/mulran/*.txt" kitti MER-MUL \
+    "$OUT_DIR/ours-mer-sin/mulran/*.txt" kitti MER-SIN \
+    "$OUT_DIR/ours-sin/mulran/*.txt" kitti SIN \
+    --metrics KITTI RPE:100 
+
+

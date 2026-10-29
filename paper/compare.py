@@ -19,44 +19,51 @@ def kitti(poses_file):
     poses[:,-1,-1] = 1
     return None, poses
 
-def kitti_gt(file_path) -> np.ndarray:
+def kitti_gt(file_path, kitti_base_dir=None) -> np.ndarray:
+    if kitti_base_dir is None:
+        kitti_base_dir = args.dataset_base_dir
     """For loading the GT KITTI poses. Similar to kitti, but also applies calibration"""
     seq = str(Path(file_path).stem)
     import pykitti
     import getpass
-    drive = pykitti.odometry(f"/media/{getpass.getuser()}/dataset-ssd/datasets/KITTI-odometry", seq)
-    #drive = pykitti.odometry("/mnt/ceph-hdd/projects/scc_umin_baum/kurda/KITTI-odometry", seq)
+    drive = pykitti.odometry(kitti_base_dir, seq)
     T_cam0_velo = drive.calib.T_cam0_velo
     poses = np.array(drive.poses)
 
     poses = np.linalg.inv(T_cam0_velo) @ poses @ T_cam0_velo
     return None, poses
 
-def kiss_on_kitti(file_path):
+def kiss_on_kitti(file_path, kitti_base_dir=None):
+    if kitti_base_dir is None:
+        kitti_base_dir = args.dataset_base_dir
     seq = str(Path(file_path).stem).replace("_poses_kitti","")
     import pykitti
-    drive = pykitti.odometry(f"/media/{getpass.getuser()}/dataset-ssd/datasets/KITTI-odometry", seq)
+    drive = pykitti.odometry(kitti_base_dir, seq)
     T_cam0_velo = drive.calib.T_cam0_velo
     _, poses = kitti(file_path)
 
     poses = np.linalg.inv(T_cam0_velo) @ poses @ T_cam0_velo
     return None, poses
 
+"""
 def mad_on_kitti(file_path):
     seq = str(Path(file_path).parent.stem)
     import pykitti
     drive = pykitti.odometry(f"/media/{getpass.getuser()}/dataset-ssd/datasets/KITTI-odometry", seq)
+    drive = pykitti.odometry(args.dataset_base_dir, seq)
     T_cam0_velo = drive.calib.T_cam0_velo
     _, poses = kitti(file_path)
 
     poses = np.linalg.inv(T_cam0_velo) @ poses @ T_cam0_velo
     return None, poses
+"""
 
-
-def mad_on_kitti(file_path):
+def mad_on_kitti(file_path, kitti_base_dir=None):
+    if kitti_base_dir is None:
+        kitti_base_dir = args.dataset_base_dir
     seq = str(Path(file_path).parent.stem)
     import pykitti
-    drive = pykitti.odometry(f"/media/{getpass.getuser()}/dataset-ssd/datasets/KITTI-odometry", seq)
+    drive = pykitti.odometry(kitti_base_dir, seq)
     T_cam0_velo = drive.calib.T_cam0_velo
     _, poses = kitti(file_path)
     poses = np.linalg.inv(T_cam0_velo) @ poses @ T_cam0_velo
@@ -271,6 +278,7 @@ if __name__ == "__main__":
     parser.add_argument('--fps',nargs='+',default=[])
     parser.add_argument('--clip',action="store_true")
     parser.add_argument('--exclude',nargs='+',default=[])
+    parser.add_argument('--dataset_base_dir',type=str,default="")
     args = parser.parse_args()
 
     assert len(args.path_dataloader_name) % 3 == 0
