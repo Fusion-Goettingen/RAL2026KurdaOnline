@@ -3,9 +3,9 @@ cd "$(dirname "$0")"
 source .venv/bin/activate
 
 # Make sure there are no trailing / for the _BASE_DIR. This crashes the evaluate.py script
-KITTI_BASE_DIR=/media/aaron/dataset-ssd/datasets/KITTI-odometry
-MULRAN_BASE_DIR=/media/aaron/dataset-ssd/datasets/MulRan
-ODYSSEY_BASE_DIR=/media/aaron/dataset-ssd/datasets/odyssey_rev1
+KITTI_BASE_DIR=/path/to/kitti
+MULRAN_BASE_DIR=/path/to/mulran
+ODYSSEY_BASE_DIR=/path/to/odyssey
 OUT_DIR=./estimates
 
 echo "Evaluating KITTI dataset"
